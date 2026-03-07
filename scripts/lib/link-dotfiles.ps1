@@ -6,12 +6,10 @@ function Unlink-Dotfiles {
     Remove-Link "$env:USERPROFILE\.gitignore_global"
     Remove-Link "$env:USERPROFILE\.config\starship.toml"
 
-    # PowerShell profile (copied, not symlinked — just delete it)
-    $psDir = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell'
-    $profilePath = "$psDir\Microsoft.PowerShell_profile.ps1"
-    if (Test-Path $profilePath) {
-        Remove-Item $profilePath -Force
-        Write-Host "  [REMOVED] $profilePath"
+    # PowerShell profile (copied, not symlinked)
+    if (Test-Path $PROFILE) {
+        Remove-Item $PROFILE -Force
+        Write-Host "  [REMOVED] $PROFILE"
     }
 
     # Windows Terminal
@@ -32,13 +30,12 @@ function Link-Dotfiles {
 
     # PowerShell profile — copy instead of symlink (OneDrive breaks symlinks in Documents)
     Write-Info "Copying PowerShell profile..."
-    $psDir = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell'
-    [System.IO.Directory]::CreateDirectory($psDir) | Out-Null
     $profileSource = "$DotfilesDir\shell\powershell\Microsoft.PowerShell_profile.ps1"
-    $profileTarget = "$psDir\Microsoft.PowerShell_profile.ps1"
     if (Test-Path $profileSource) {
-        Copy-Item $profileSource $profileTarget -Force
-        Write-Host "  [COPY] $profileSource -> $profileTarget"
+        $profileDir = Split-Path -Parent $PROFILE
+        New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
+        Copy-Item $profileSource $PROFILE -Force
+        Write-Host "  [COPY] $profileSource -> $PROFILE"
     }
 
     Write-Info "Linking config directories..."
