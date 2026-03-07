@@ -53,7 +53,7 @@ function Ensure-Linked {
 
     $sourceItem = Get-Item $Source -Force
     if ($sourceItem.PSIsContainer) {
-        cmd /c mklink /J "$Target" "$Source" | Out-Null
+        New-Item -ItemType Junction -Path $Target -Target $Source -Force | Out-Null
     } else {
         New-Item -ItemType SymbolicLink -Path $Target -Target $Source -Force | Out-Null
     }

@@ -35,7 +35,7 @@ function Install-Deps {
     # Refresh PATH so fnm is available if just installed
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "Machine")
     if (Get-Command fnm -ErrorAction SilentlyContinue) {
-        fnm env --use-on-cd | Out-String | Invoke-Expression
+        fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
         $ltsInstalled = fnm list 2>$null | Select-String "lts-latest"
         if (-not $ltsInstalled) {
             Write-Info "Installing latest Node.js LTS via fnm..."

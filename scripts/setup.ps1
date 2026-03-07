@@ -9,7 +9,36 @@ param(
     [switch]$Help
 )
 
+# --- PowerShell 7 bootstrap (runs under PS 5.1) ---
+if ($PSVersionTable.PSVersion.Major -lt 7) {
+    if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
+        if (-not (Get-Command winget -ErrorAction SilentlyContinue)) {
+            Write-Host "[ERROR] winget is required. Install App Installer from the Microsoft Store." -ForegroundColor Red
+            exit 1
+        }
+        Write-Host "[INFO] Installing PowerShell 7..." -ForegroundColor Green
+        winget install --id Microsoft.PowerShell -h --accept-package-agreements --accept-source-agreements
+        $env:Path = [System.Environment]::GetEnvironmentVariable("Path","User") + ";" +
+                     [System.Environment]::GetEnvironmentVariable("Path","Machine")
+        if (-not (Get-Command pwsh -ErrorAction SilentlyContinue)) {
+            Write-Host "[ERROR] Failed to install PowerShell 7. Install manually from https://aka.ms/powershell" -ForegroundColor Red
+            exit 1
+        }
+    }
+    Write-Host "[INFO] Re-launching under PowerShell 7..." -ForegroundColor Green
+    $argList = @('-NoProfile', '-File', $MyInvocation.MyCommand.Path)
+    foreach ($key in $PSBoundParameters.Keys) {
+        $val = $PSBoundParameters[$key]
+        if ($val -is [switch]) { if ($val) { $argList += "-$key" } }
+        else { $argList += "-$key"; $argList += $val }
+    }
+    & pwsh @argList
+    exit $LASTEXITCODE
+}
+# --- End bootstrap ---
+
 $ErrorActionPreference = "Stop"
+$PSNativeCommandUseErrorActionPreference = $false
 $ScriptsDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 $DotfilesDir = Split-Path -Parent $ScriptsDir
 

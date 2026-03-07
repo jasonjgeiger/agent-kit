@@ -6,9 +6,8 @@ function Unlink-Dotfiles {
     Remove-Link "$env:USERPROFILE\.gitignore_global"
     Remove-Link "$env:USERPROFILE\.config\starship.toml"
 
-    # PowerShell profiles
+    # PowerShell profile
     Remove-Link "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
-    Remove-Link "$env:USERPROFILE\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 
     # GitHub config
     Remove-Link "$env:USERPROFILE\.github\copilot-instructions.md"
@@ -34,8 +33,6 @@ function Link-Dotfiles {
     Write-Info "Linking PowerShell profile..."
     Ensure-Linked "$DotfilesDir\shell\powershell\Microsoft.PowerShell_profile.ps1" `
         "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
-    Ensure-Linked "$DotfilesDir\shell\powershell\Microsoft.PowerShell_profile.ps1" `
-        "$env:USERPROFILE\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
 
     Write-Info "Linking GitHub configuration..."
     $ghRoot = "$env:USERPROFILE\.github"

@@ -73,6 +73,3 @@ if (Test-Path "$env:USERPROFILE\.cargo\bin") {
 if (Test-Path "$env:USERPROFILE\.local\bin") {
     $env:PATH += ";$env:USERPROFILE\.local\bin"
 }
-
-# UTF-8 encoding
-$PSDefaultParameterValues['Out-File:Encoding'] = 'utf8'
