@@ -1,7 +1,7 @@
 # Single entry point for Windows setup.
 param(
     [Parameter(Position=0)]
-    [ValidateSet("install", "link", "link-dotfiles", "link-ai-agents", "status", "project-agents")]
+    [ValidateSet("install", "link", "link-dotfiles", "link-ai-agents", "reset", "status", "project-agents")]
     [string]$Action,
 
     [string]$ProjectPath,
@@ -27,6 +27,7 @@ Commands:
   link                Link dotfiles and AI agent configs (no installs)
   link-dotfiles       Link base dotfiles only
   link-ai-agents      Link AI agent configs only
+  reset               Remove all links and uninstall dependencies
   status              Show current link status
   project-agents      Link agents into a project (-ProjectPath required)
 
@@ -81,6 +82,7 @@ switch ($Action) {
     "link"           { Link-Dotfiles $DotfilesDir; Link-AiAgents $DotfilesDir }
     "link-dotfiles"  { Link-Dotfiles $DotfilesDir }
     "link-ai-agents" { Link-AiAgents $DotfilesDir }
+    "reset"          { Unlink-Dotfiles; Unlink-AiAgents $DotfilesDir; Uninstall-Deps }
     "status"         { Show-Status }
     "project-agents" {
         if (-not $ProjectPath) { Write-Err "Missing -ProjectPath"; exit 1 }

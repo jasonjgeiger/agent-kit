@@ -34,3 +34,38 @@ function Install-Deps {
 
     Write-Info "Dependencies installed"
 }
+
+function Uninstall-Deps {
+    Write-Info "Removing dependencies..."
+
+    # Winget packages
+    $packages = @(
+        "Schniz.fnm",
+        "eza-community.eza",
+        "junegunn.fzf",
+        "BurntSushi.ripgrep.MSVC",
+        "sharkdp.bat",
+        "sharkdp.fd",
+        "JanDeDobbeleer.OhMyPosh",
+        "Starship.Starship"
+    )
+
+    foreach ($id in $packages) {
+        $installed = winget list --id $id --accept-source-agreements 2>$null
+        if ($LASTEXITCODE -eq 0) {
+            Write-Info "Uninstalling $id..."
+            winget uninstall --id $id --silent 2>$null
+        }
+    }
+
+    # PowerShell modules
+    $modules = @("Terminal-Icons", "z", "PSFzf")
+    foreach ($mod in $modules) {
+        if (Get-Module -ListAvailable -Name $mod) {
+            Write-Info "Removing module: $mod"
+            Uninstall-Module -Name $mod -AllVersions -Force -ErrorAction SilentlyContinue
+        }
+    }
+
+    Write-Info "Dependencies removed"
+}

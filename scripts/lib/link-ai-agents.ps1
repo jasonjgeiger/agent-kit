@@ -1,4 +1,24 @@
-# Link AI agent configs using the JSON manifest (Windows).
+# Link/unlink AI agent configs using the JSON manifest (Windows).
+
+function Unlink-AiAgents {
+    param([string]$DotfilesDir)
+
+    $config = Join-Path $DotfilesDir "scripts\ai-agent-links.json"
+
+    if (-not (Test-Path $config)) {
+        Write-Err "Missing config: $config"
+        return
+    }
+
+    Write-Info "Removing AI agent links..."
+
+    $manifest = Get-Content $config -Raw | ConvertFrom-Json
+
+    foreach ($target in $manifest.targets) {
+        $targetPath = $target.path -replace '^~', $env:USERPROFILE
+        Remove-Link $targetPath
+    }
+}
 
 function Link-AiAgents {
     param([string]$DotfilesDir)

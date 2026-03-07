@@ -90,3 +90,60 @@ install_deps() {
     info "Log out and back in for the shell change to take effect"
   fi
 }
+
+uninstall_deps() {
+  local os
+  os=$(detect_os)
+  info "Detected OS: $os"
+
+  # Oh My Zsh (includes custom plugins)
+  if [[ -d "$HOME/.oh-my-zsh" ]]; then
+    info "Removing Oh My Zsh..."
+    rm -rf "$HOME/.oh-my-zsh"
+  fi
+
+  # fnm
+  if [[ -d "$HOME/.local/share/fnm" ]]; then
+    info "Removing fnm..."
+    rm -rf "$HOME/.local/share/fnm"
+  elif [[ -d "$HOME/.fnm" ]]; then
+    info "Removing fnm..."
+    rm -rf "$HOME/.fnm"
+  fi
+
+  # Starship (curl-installed binary)
+  if [[ "$os" != "macos" ]] && [[ -f "$HOME/.cargo/bin/starship" || -f /usr/local/bin/starship ]]; then
+    info "Removing starship..."
+    rm -f /usr/local/bin/starship "$HOME/.cargo/bin/starship" 2>/dev/null || true
+  fi
+
+  # CLI tools
+  info "Removing CLI tools..."
+  case $os in
+    macos)
+      brew uninstall --ignore-dependencies git gh curl wget ripgrep fd bat fzf eza starship ast-grep 2>/dev/null || true
+      ;;
+    arch)
+      sudo pacman -Rns --noconfirm git github-cli curl wget ripgrep fd bat fzf eza starship ast-grep 2>/dev/null || true
+      ;;
+    ubuntu)
+      sudo apt remove -y git gh ripgrep fd-find bat fzf eza 2>/dev/null || true
+      [[ -L /usr/bin/fd && "$(readlink /usr/bin/fd)" == /usr/bin/fdfind ]] && sudo rm -f /usr/bin/fd
+      [[ -L /usr/bin/bat && "$(readlink /usr/bin/bat)" == /usr/bin/batcat ]] && sudo rm -f /usr/bin/bat
+      if command -v npm &>/dev/null; then
+        npm uninstall -g @ast-grep/cli 2>/dev/null || true
+      fi
+      ;;
+  esac
+
+  # Restore default shell if currently zsh
+  if [[ "${SHELL##*/}" == "zsh" ]]; then
+    local default_shell="/bin/bash"
+    if [[ -x /bin/bash ]]; then
+      info "Restoring default shell to bash..."
+      chsh -s "$default_shell" || warn "Could not change shell back to bash"
+    fi
+  fi
+
+  info "Dependencies removed"
+}

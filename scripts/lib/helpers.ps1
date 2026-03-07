@@ -4,6 +4,20 @@ function Write-Info  { param($Msg) Write-Host "[INFO] $Msg" -ForegroundColor Gre
 function Write-Warn  { param($Msg) Write-Host "[WARN] $Msg" -ForegroundColor Yellow }
 function Write-Err   { param($Msg) Write-Host "[ERROR] $Msg" -ForegroundColor Red }
 
+function Remove-Link {
+    param([string]$Target)
+
+    if (Test-Path $Target) {
+        $item = Get-Item $Target -Force
+        if ($item.Attributes -band [IO.FileAttributes]::ReparsePoint) {
+            Remove-Item $Target -Force
+            Write-Host "  [REMOVED] $Target"
+        } else {
+            Write-Warn "Not a symlink, skipping: $Target"
+        }
+    }
+}
+
 function Ensure-Linked {
     param([string]$Source, [string]$Target)
 

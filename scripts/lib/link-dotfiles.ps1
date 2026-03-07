@@ -1,4 +1,28 @@
-# Link base dotfiles, GitHub config, PowerShell profile (Windows).
+# Link/unlink base dotfiles, GitHub config, PowerShell profile (Windows).
+
+function Unlink-Dotfiles {
+    Write-Info "Removing dotfile links..."
+    Remove-Link "$env:USERPROFILE\.gitconfig"
+    Remove-Link "$env:USERPROFILE\.gitignore_global"
+    Remove-Link "$env:USERPROFILE\.config\starship.toml"
+
+    # PowerShell profiles
+    Remove-Link "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
+    Remove-Link "$env:USERPROFILE\Documents\WindowsPowerShell\Microsoft.PowerShell_profile.ps1"
+
+    # GitHub config
+    Remove-Link "$env:USERPROFILE\.github\copilot-instructions.md"
+    Remove-Link "$env:USERPROFILE\.github\prompts"
+    Remove-Link "$env:USERPROFILE\.github\agents"
+
+    # Windows Terminal
+    @(
+        "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminal_8wekyb3d8bbwe\LocalState\settings.json",
+        "$env:LOCALAPPDATA\Packages\Microsoft.WindowsTerminalPreview_8wekyb3d8bbwe\LocalState\settings.json"
+    ) | ForEach-Object {
+        if (Test-Path $_) { Remove-Link $_ }
+    }
+}
 
 function Link-Dotfiles {
     param([string]$DotfilesDir)
