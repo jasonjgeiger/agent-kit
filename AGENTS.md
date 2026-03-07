@@ -1,6 +1,6 @@
 # Agent Protocols
 
-- Workspace: `~/Developer` (macOS), `F:\` (Windows Dev Drive).
+- Default workspace: `F:\` (Windows Dev Drive), or `~/Developer` (macOS).
 - Editor: `code <path>`.
 - Commits: Conventional Commits (`feat|fix|refactor|build|ci|chore|docs|style|perf|test`).
 - PRs: `gh pr view` / `gh pr diff`; no browser URLs.
@@ -10,6 +10,14 @@
 - Prefer end-to-end verification; if blocked, state what is missing.
 - New deps: quick health check (recent releases/commits, adoption).
 - Before coding: check `docs/` if present, follow links until domain is clear.
+
+## Learnings
+
+- Track learnings in a `LEARNINGS.md` file at the project root as you work. Read this file before you start.
+- Record things like: discovered project conventions, non-obvious gotchas, debugging insights, architectural decisions, and useful commands.
+- Keep entries concise - one bullet per learning.
+- Before adding a new entry, check for duplicates or outdated entries and update them instead.
+- Do not log routine or obvious information - only things that would save time in a future session.
 
 ## Git
 

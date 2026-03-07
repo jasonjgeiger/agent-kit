@@ -84,7 +84,6 @@ function Show-Status {
         "$env:USERPROFILE\.gitconfig"
         "$env:USERPROFILE\.gitignore_global"
         "$env:USERPROFILE\.config\starship.toml"
-        "$env:USERPROFILE\.github\copilot-instructions.md"
         "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
     )
     foreach ($target in $dotfileTargets) {

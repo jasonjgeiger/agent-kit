@@ -1,4 +1,4 @@
-# Link/unlink base dotfiles, GitHub config, PowerShell profile (Windows).
+# Link/unlink base dotfiles and PowerShell profile (Windows).
 
 function Unlink-Dotfiles {
     Write-Info "Removing dotfile links..."
@@ -8,11 +8,6 @@ function Unlink-Dotfiles {
 
     # PowerShell profile
     Remove-Link "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
-
-    # GitHub config
-    Remove-Link "$env:USERPROFILE\.github\copilot-instructions.md"
-    Remove-Link "$env:USERPROFILE\.github\prompts"
-    Remove-Link "$env:USERPROFILE\.github\agents"
 
     # Windows Terminal
     @(
@@ -33,13 +28,6 @@ function Link-Dotfiles {
     Write-Info "Linking PowerShell profile..."
     Ensure-Linked "$DotfilesDir\shell\powershell\Microsoft.PowerShell_profile.ps1" `
         "$env:USERPROFILE\Documents\PowerShell\Microsoft.PowerShell_profile.ps1"
-
-    Write-Info "Linking GitHub configuration..."
-    $ghRoot = "$env:USERPROFILE\.github"
-    New-Item -ItemType Directory -Path $ghRoot -Force | Out-Null
-    Ensure-Linked "$DotfilesDir\.github\copilot-instructions.md" "$ghRoot\copilot-instructions.md"
-    Ensure-Linked "$DotfilesDir\.github\prompts"                 "$ghRoot\prompts"
-    Ensure-Linked "$DotfilesDir\agents"                          "$ghRoot\agents"
 
     Write-Info "Linking config directories..."
     Ensure-Linked "$DotfilesDir\.config\starship.toml" "$env:USERPROFILE\.config\starship.toml"

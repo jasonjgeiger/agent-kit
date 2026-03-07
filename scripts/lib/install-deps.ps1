@@ -23,26 +23,20 @@ function Install-Deps {
         }
     }
 
-    # Ensure NuGet provider and trusted PSGallery for CurrentUser installs
-    if (-not (Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue)) {
-        Install-PackageProvider -Name NuGet -Scope CurrentUser -Force | Out-Null
-    }
-    $gallery = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
-    if ($gallery -and $gallery.InstallationPolicy -ne 'Trusted') {
-        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
-    }
+    # Refresh PATH so newly installed tools are available in this session
+    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" +
+                [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 
+    # Install PowerShell modules (Install-PSResource ships with PS7.4+, defaults to CurrentUser)
     $modules = @("Terminal-Icons", "z", "PSFzf", "PSReadLine")
     foreach ($mod in $modules) {
         if (-not (Get-Module -ListAvailable -Name $mod)) {
             Write-Info "Installing module: $mod"
-            Install-Module -Name $mod -Scope CurrentUser -Force -SkipPublisherCheck
+            Install-PSResource -Name $mod -Scope CurrentUser -TrustRepository -Quiet
         }
     }
 
     # Node.js LTS via fnm
-    # Refresh PATH so fnm is available if just installed
-    $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" + [System.Environment]::GetEnvironmentVariable("Path", "Machine")
     if (Get-Command fnm -ErrorAction SilentlyContinue) {
         fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
         $ltsInstalled = fnm list 2>$null | Select-String "lts-latest"
@@ -84,7 +78,7 @@ function Uninstall-Deps {
     foreach ($mod in $modules) {
         if (Get-Module -ListAvailable -Name $mod) {
             Write-Info "Removing module: $mod"
-            Uninstall-Module -Name $mod -AllVersions -Force -ErrorAction SilentlyContinue
+            Uninstall-PSResource -Name $mod -Scope CurrentUser -SkipDependencyCheck -ErrorAction SilentlyContinue
         }
     }
 

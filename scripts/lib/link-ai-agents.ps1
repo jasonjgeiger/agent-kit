@@ -15,7 +15,7 @@ function Unlink-AiAgents {
     $manifest = Get-Content $config -Raw | ConvertFrom-Json
 
     foreach ($target in $manifest.targets) {
-        $targetPath = $target.path -replace '^~', $env:USERPROFILE
+        $targetPath = ($target.path -replace '^~', $env:USERPROFILE) -replace '/', '\'
         Remove-Link $targetPath
     }
 }
@@ -42,7 +42,7 @@ function Link-AiAgents {
         }
 
         $sourceAbs = Join-Path $DotfilesDir $sourceRel
-        $targetPath = $target.path -replace '^~', $env:USERPROFILE
+        $targetPath = ($target.path -replace '^~', $env:USERPROFILE) -replace '/', '\'
 
         if (-not (Test-Path $sourceAbs)) {
             Write-Warn "Missing source: $sourceAbs, skipping"
@@ -66,7 +66,7 @@ function Show-AiAgentStatus {
     $manifest = Get-Content $config -Raw | ConvertFrom-Json
 
     foreach ($target in $manifest.targets) {
-        $targetPath = $target.path -replace '^~', $env:USERPROFILE
+        $targetPath = ($target.path -replace '^~', $env:USERPROFILE) -replace '/', '\'
 
         if (Test-Path $targetPath) {
             $item = Get-Item $targetPath -Force
