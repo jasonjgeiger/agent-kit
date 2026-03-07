@@ -33,9 +33,28 @@ function Link-Dotfiles {
     $profileSource = "$DotfilesDir\shell\powershell\Microsoft.PowerShell_profile.ps1"
     if (Test-Path $profileSource) {
         $profileDir = Split-Path -Parent $PROFILE
-        New-Item -ItemType Directory -Path $profileDir -Force | Out-Null
-        Copy-Item $profileSource $PROFILE -Force
-        Write-Host "  [COPY] $profileSource -> $PROFILE"
+        try {
+            New-Item -ItemType Directory -Path $profileDir -Force -ErrorAction Stop | Out-Null
+            Copy-Item $profileSource $PROFILE -Force -ErrorAction Stop
+            # Copy Oh My Posh theme alongside profile
+            $themeSource = "$DotfilesDir\shell\powershell\pure.omp.json"
+            if (Test-Path $themeSource) {
+                Copy-Item $themeSource "$profileDir\pure.omp.json" -Force -ErrorAction Stop
+            }
+            Write-Host "  [COPY] $profileSource -> $PROFILE"
+        }
+        catch {
+            Write-Warning "Could not copy PowerShell profile to $PROFILE"
+            Write-Warning $_.Exception.Message
+            Write-Host ""
+            Write-Host "  This is likely caused by Controlled Folder Access (CFA) blocking writes" -ForegroundColor Yellow
+            Write-Host "  to OneDrive-protected folders. To fix:" -ForegroundColor Yellow
+            Write-Host "    1. Open Windows Security > Virus & threat protection" -ForegroundColor Cyan
+            Write-Host "    2. Ransomware protection > Allow an app through Controlled folder access" -ForegroundColor Cyan
+            Write-Host "    3. Add: $((Get-Process -Id $PID).Path)" -ForegroundColor Cyan
+            Write-Host "    4. Re-run this setup script" -ForegroundColor Cyan
+            Write-Host ""
+        }
     }
 
     Write-Info "Linking config directories..."

@@ -4,7 +4,8 @@
 
 # Oh-My-Posh prompt
 if (Get-Command oh-my-posh -ErrorAction SilentlyContinue) {
-    oh-my-posh init pwsh | Invoke-Expression
+    $profileDir = Split-Path -Parent $PROFILE
+    oh-my-posh init pwsh --config "$profileDir\pure.omp.json" | Invoke-Expression
 }
 
 # =============================================================================
@@ -45,7 +46,7 @@ Set-PSReadLineOption -PredictionSource History
 Set-PSReadLineOption -PredictionViewStyle ListView
 Set-PSReadLineOption -EditMode Windows
 Set-PSReadLineOption -MaximumHistoryCount 10000
-Set-PSReadLineOption -HistoryNoDuplicates $true
+Set-PSReadLineOption -HistoryNoDuplicates
 Set-PSReadLineOption -BellStyle None
 
 # =============================================================================
