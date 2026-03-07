@@ -27,16 +27,17 @@ function Install-Deps {
     $env:Path = [System.Environment]::GetEnvironmentVariable("Path", "User") + ";" +
                 [System.Environment]::GetEnvironmentVariable("Path", "Machine")
 
-    # Install PowerShell modules (Install-PSResource ships with PS7.4+, defaults to CurrentUser)
-    # Ensure the CurrentUser modules directory exists (OneDrive may redirect Documents)
-    $userModDir = Join-Path ([Environment]::GetFolderPath('MyDocuments')) 'PowerShell\Modules'
-    if (-not (Test-Path $userModDir)) { New-Item -ItemType Directory -Path $userModDir -Force | Out-Null }
+    # Install PowerShell modules via Save-PSResource to a local (non-OneDrive) path.
+    # OneDrive sync breaks Install-PSResource -Scope CurrentUser, so we use a path
+    # under AppData/Local and prepend it to PSModulePath in the profile.
+    $localModDir = "$env:LOCALAPPDATA\PowerShell\Modules"
+    if (-not (Test-Path $localModDir)) { New-Item -ItemType Directory -Path $localModDir -Force | Out-Null }
 
     $modules = @("Terminal-Icons", "z", "PSFzf", "PSReadLine")
     foreach ($mod in $modules) {
-        if (-not (Get-Module -ListAvailable -Name $mod)) {
+        if (-not (Test-Path "$localModDir\$mod")) {
             Write-Info "Installing module: $mod"
-            Install-PSResource -Name $mod -Scope CurrentUser -TrustRepository -Quiet
+            Save-PSResource -Name $mod -Path $localModDir -TrustRepository -IncludeXml
         }
     }
 
@@ -77,12 +78,14 @@ function Uninstall-Deps {
         }
     }
 
-    # PowerShell modules
+    # PowerShell modules (installed via Save-PSResource to local path)
+    $localModDir = "$env:LOCALAPPDATA\PowerShell\Modules"
     $modules = @("Terminal-Icons", "z", "PSFzf")
     foreach ($mod in $modules) {
-        if (Get-Module -ListAvailable -Name $mod) {
+        $modPath = Join-Path $localModDir $mod
+        if (Test-Path $modPath) {
             Write-Info "Removing module: $mod"
-            Uninstall-PSResource -Name $mod -Scope CurrentUser -SkipDependencyCheck -ErrorAction SilentlyContinue
+            Remove-Item $modPath -Recurse -Force
         }
     }
 

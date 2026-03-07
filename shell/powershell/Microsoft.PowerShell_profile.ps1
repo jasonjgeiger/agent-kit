@@ -19,6 +19,12 @@ if (Get-Command fnm -ErrorAction SilentlyContinue) {
 # MODULES
 # =============================================================================
 
+# Local module path (avoids OneDrive sync issues)
+$localModDir = "$env:LOCALAPPDATA\PowerShell\Modules"
+if ((Test-Path $localModDir) -and ($env:PSModulePath -notlike "*$localModDir*")) {
+    $env:PSModulePath = "$localModDir;$env:PSModulePath"
+}
+
 # Terminal Icons (file icons in ls output)
 Import-Module Terminal-Icons -ErrorAction SilentlyContinue
 
