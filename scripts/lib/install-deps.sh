@@ -83,6 +83,14 @@ install_deps() {
     curl -fsSL https://fnm.vercel.app/install | bash -s -- --skip-shell
   }
 
+  # Node.js LTS via fnm
+  eval "$(fnm env)" 2>/dev/null
+  if command -v fnm &>/dev/null && ! fnm list | grep -q lts-latest; then
+    info "Installing latest Node.js LTS via fnm..."
+    fnm install --lts
+    fnm default lts-latest
+  fi
+
   # Default shell
   if [[ "${SHELL##*/}" != "zsh" ]]; then
     info "Setting zsh as default shell..."
