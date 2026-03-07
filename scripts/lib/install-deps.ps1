@@ -16,11 +16,20 @@ function Install-Deps {
     )
 
     foreach ($id in $packages) {
-        $installed = winget list --id $id --accept-source-agreements 2>$null
+        winget list --id $id --exact --accept-source-agreements 2>$null | Out-Null
         if ($LASTEXITCODE -ne 0) {
             Write-Info "Installing $id..."
-            winget install --id $id -h --accept-package-agreements --accept-source-agreements
+            winget install --id $id --exact -h --accept-package-agreements --accept-source-agreements
         }
+    }
+
+    # Ensure NuGet provider and trusted PSGallery for CurrentUser installs
+    if (-not (Get-PackageProvider -Name NuGet -ErrorAction SilentlyContinue)) {
+        Install-PackageProvider -Name NuGet -Scope CurrentUser -Force | Out-Null
+    }
+    $gallery = Get-PSRepository -Name PSGallery -ErrorAction SilentlyContinue
+    if ($gallery -and $gallery.InstallationPolicy -ne 'Trusted') {
+        Set-PSRepository -Name PSGallery -InstallationPolicy Trusted
     }
 
     $modules = @("Terminal-Icons", "z", "PSFzf", "PSReadLine")
@@ -63,10 +72,10 @@ function Uninstall-Deps {
     )
 
     foreach ($id in $packages) {
-        $installed = winget list --id $id --accept-source-agreements 2>$null
+        winget list --id $id --exact --accept-source-agreements 2>$null | Out-Null
         if ($LASTEXITCODE -eq 0) {
             Write-Info "Uninstalling $id..."
-            winget uninstall --id $id --silent 2>$null
+            winget uninstall --id $id --exact --silent 2>$null
         }
     }
 
