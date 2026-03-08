@@ -74,7 +74,8 @@
     "figma@claude-plugins-official": true,
     "typescript-lsp@claude-plugins-official": true,
     "csharp-lsp@claude-plugins-official": true,
-    "swift-lsp@claude-plugins-official": true
+    "swift-lsp@claude-plugins-official": true,
+    "rust-analyzer-lsp@claude-plugins-official": true
   },
   "outputStyle": "explanatory",
   "effortLevel": "medium"
