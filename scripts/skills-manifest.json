@@ -25,6 +25,11 @@
     { "name": "react-best-practices",        "repo": "vercel-labs/agent-skills", "path": "skills/react-best-practices" },
     { "name": "web-design-guidelines",       "repo": "vercel-labs/agent-skills", "path": "skills/web-design-guidelines" },
     { "name": "webapp-testing",              "repo": "anthropics/skills", "path": "skills/webapp-testing" },
-    { "name": "winui-app",                   "repo": "openai/skills", "path": "skills/.curated/winui-app" }
+    { "name": "winui-app",                   "repo": "openai/skills", "path": "skills/.curated/winui-app" },
+    { "name": "swiftui-liquid-glass",        "repo": "Dimillian/Skills", "path": "swiftui-liquid-glass" },
+    { "name": "swiftui-ui-patterns",         "repo": "Dimillian/Skills", "path": "swiftui-ui-patterns" },
+    { "name": "swiftui-view-refactor",       "repo": "Dimillian/Skills", "path": "swiftui-view-refactor" },
+    { "name": "emil-design-eng",             "repo": "emilkowalski/skill", "path": "skills/emil-design-eng" },
+    { "name": "make-interfaces-feel-better", "repo": "jakubkrehel/make-interfaces-feel-better", "path": "skills/make-interfaces-feel-better" }
   ]
 }
