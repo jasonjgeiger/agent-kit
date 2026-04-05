@@ -49,6 +49,13 @@ Found N issues:
 
 Or if no issues: "No significant issues found."
 
+## Anti-Hallucination Rules
+
+- If you're not sure whether code is actually reachable, don't flag it.
+- If a pattern looks wrong but tests pass and git blame shows deliberate authorship, leave it.
+- Never flag something as a "potential issue" — either it IS an issue with a concrete scenario, or skip it.
+- Don't invent hypothetical edge cases. If you can't describe a realistic trigger, it's not a finding.
+
 ## False Positives to Ignore
 
 - Pre-existing issues not introduced by these changes

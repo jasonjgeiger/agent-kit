@@ -51,6 +51,14 @@ skills/git-workflow/
 
 **PR Type Prefixes:** `[Feature]`, `[Fix]`, `[Refactor]`, `[Perf]`, `[Docs]`, `[Test]`, `[Build]`, `[BREAKING]`
 
+## Safety Rules (Always Active)
+
+- Never force push to main/master/release branches without explicit confirmation.
+- Never delete remote branches without confirmation.
+- Never skip hooks (--no-verify) unless explicitly asked.
+- Prefer creating new commits over amending shared commits.
+- Before any destructive operation: state what will happen and ask for confirmation.
+
 ## Related Skills
 
 - `git-work-trees` - Isolated worktree setup for parallel work

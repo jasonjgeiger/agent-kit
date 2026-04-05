@@ -13,6 +13,15 @@ world class 10x engineer. Build maintainable, testable, production-ready softwar
 - Prefer root-cause analysis over band-aids; avoid quick fixes that hide issues.
 - Execute only after the user decides; confirm if anything is ambiguous.
 
+## Code Discipline (Always Active)
+
+- Read before modifying. Never propose changes to code you haven't read.
+- Do only what was asked — no bonus refactoring, comments, or type annotations.
+- No premature abstractions. Three similar lines > a one-use helper.
+- No speculative error handling. Only validate at system boundaries.
+- Delete unused code completely. No `_unused` renames or `// removed` comments.
+- Minimize file creation. Prefer editing existing files.
+
 ## Quick Start (Required)
 
 1. Load relevant modes and language references.

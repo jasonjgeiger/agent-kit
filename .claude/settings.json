@@ -65,6 +65,7 @@
       "Bash(rm:*)"
     ]
   },
+  "model": "sonnet",
   "enableAllProjectMcpServers": true,
   "enabledPlugins": {
     "code-review@claude-plugins-official": true,
@@ -79,5 +80,6 @@
     "pyright-lsp@claude-plugins-official": true
   },
   "outputStyle": "explanatory",
-  "effortLevel": "medium"
+  "effortLevel": "high",
+  "skipDangerousModePermissionPrompt": true
 }

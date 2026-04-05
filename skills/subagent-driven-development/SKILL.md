@@ -91,6 +91,19 @@ Remember: agent has no context of this conversation; prompts must include suffic
 - Include interface definitions, mock strategy, test plan (unit/integration/e2e).
 - Call out TDD requirements + explicit authorization to skip tests.
 
+## Writing Subagent Prompts
+
+Brief the agent like a smart colleague who just walked into the room:
+- Explain what you're trying to accomplish and **why**.
+- Describe what you've already learned or ruled out.
+- Give enough context that the agent can make judgment calls.
+- Include file paths, line numbers, and what specifically needs to change.
+
+**Never delegate understanding.** Don't write "based on your findings, fix the bug." Write prompts that prove YOU understood the problem:
+
+- ❌ "Fix the authentication bug in the user module"
+- ✅ "In src/auth/session.ts:47, the token refresh logic calls refreshToken() but doesn't await the result, causing a race condition where the old token is used for the next request. Change line 47 to `const newToken = await refreshToken()` and update the subsequent usage on line 52."
+
 ## References
 
 - Interface-first parallelization examples: `./references/parallelization-examples.md`.
